@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "id": "antipillager-server",
+  "version": "${version}",
+  "name": "antipillager-server",
+  "description": "",
+  "authors": [],
+  "contact": {},
+  "license": "All-Rights-Reserved",
+  "icon": "assets/antipillager-server/icon.png",
+  "environment": "server",
+  "entrypoints": {
+    "main": [
+      "it.pruefert.antipillager.AntiPillager"
+    ]
+  },
+  "mixins": [
+    "antipillager-server.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric": "*",
+    "minecraft": "${minecraft_version}"
+  }
+}
