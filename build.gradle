@@ -22,7 +22,8 @@ repositories {
 dependencies {
     // To change the versions see the gradle.properties file
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
-    // Minecraft 26.1+ ships unobfuscated — no mappings dependency needed
+    // Minecraft 26.1+ ships unobfuscated; use passthrough official mappings
+    mappings loom.officialMojangMappings()
 
     implementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
