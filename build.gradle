@@ -10,6 +10,10 @@ base {
     archivesName = project.archives_base_name
 }
 
+loom {
+    // Minecraft 26.1+ is fully unobfuscated — no intermediary mappings exist
+    noIntermediateMappings()
+}
 
 repositories {
     // Add repositories to retrieve artifacts from in here.
@@ -22,8 +26,8 @@ repositories {
 dependencies {
     // To change the versions see the gradle.properties file
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
-    // Minecraft 26.1+ ships unobfuscated; use passthrough official mappings
-    mappings loom.officialMojangMappings()
+    // Minecraft 26.1+ ships unobfuscated; use passthrough (empty) layered mappings
+    mappings loom.layered { }
 
     implementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
