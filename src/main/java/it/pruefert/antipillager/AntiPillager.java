@@ -4,13 +4,11 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.mob.PillagerEntity;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.WorldSavePath;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.monster.illager.Pillager;
+import net.minecraft.world.level.storage.LevelResource;
+import net.minecraft.world.phys.AABB;
 
 import java.io.File;
 import java.io.FileReader;
@@ -35,21 +33,21 @@ public class AntiPillager implements ModInitializer {
             loadZones(server);
         }
 
-        for (ServerWorld world : server.getWorlds()) {
+        for (ServerLevel level : server.getAllLevels()) {
             for (Zone zone : zones) {
-                Box box = new Box(
+                AABB box = new AABB(
                         zone.x - zone.radius, zone.y - zone.radius, zone.z - zone.radius,
                         zone.x + zone.radius, zone.y + zone.radius, zone.z + zone.radius
                 );
 
-                List<PillagerEntity> pillagers = world.getEntitiesByType(
-                        EntityType.PILLAGER,
+                List<Pillager> pillagers = level.getEntitiesOfClass(
+                        Pillager.class,
                         box,
-                        entity -> entity.squaredDistanceTo(new Vec3d(zone.x, zone.y, zone.z)) <= (zone.radius * zone.radius)
+                        entity -> entity.distanceToSqr(zone.x, zone.y, zone.z) <= (zone.radius * zone.radius)
                 );
 
-                for (PillagerEntity pillager : pillagers) {
-                    pillager.discard(); // Equivalent to kill()
+                for (Pillager pillager : pillagers) {
+                    pillager.discard();
                 }
             }
         }
@@ -57,7 +55,7 @@ public class AntiPillager implements ModInitializer {
 
     private void loadZones(MinecraftServer server) {
         try {
-            File configFile = new File(server.getSavePath(WorldSavePath.ROOT).toFile(), "pillagerblocker.json");
+            File configFile = new File(server.getWorldPath(LevelResource.ROOT).toFile(), "pillagerblocker.json");
             if (!configFile.exists()) {
                 System.out.println("[PillagerBlocker] No config found, creating default... @ " + configFile.getAbsolutePath());
                 configFile.createNewFile();
