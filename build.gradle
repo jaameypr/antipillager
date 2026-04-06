@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '1.15-SNAPSHOT'
+    id 'net.fabricmc.fabric-loom' version '1.15-SNAPSHOT'
     id 'maven-publish'
 }
 
@@ -8,11 +8,6 @@ group = project.maven_group
 
 base {
     archivesName = project.archives_base_name
-}
-
-loom {
-    // Minecraft 26.1+ is fully unobfuscated — no intermediary mappings exist
-    noIntermediateMappings()
 }
 
 repositories {
@@ -26,8 +21,6 @@ repositories {
 dependencies {
     // To change the versions see the gradle.properties file
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
-    // Minecraft 26.1+ ships unobfuscated; use passthrough (empty) layered mappings
-    mappings loom.layered { }
 
     implementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
